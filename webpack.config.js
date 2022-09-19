@@ -9,22 +9,6 @@ const isDev = !isProd
 
 const filename = (ext) => isDev ? `bundle.${ext}` : `bundle.[hash].${ext}`
 
-const jsLoaders = () => {
-  const loaders = [
-    {
-      loader: 'babel-loader',
-      options: {
-        presets: ['@babel/preset-env'],
-      },
-    },
-  ]
-
-  if (isDev) {
-    loaders.push('eslint-loader')
-  }
-
-  return loaders
-}
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
@@ -70,13 +54,7 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              hmr: isDev,
-              reloadAll: true,
-            },
-          },
+          MiniCssExtractPlugin.loader,
           'css-loader',
           'sass-loader',
         ],
@@ -84,7 +62,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: jsLoaders(),
+        use: 'babel-loader',
       },
     ],
   },
