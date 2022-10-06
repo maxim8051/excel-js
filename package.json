@@ -23,11 +23,12 @@
   "bugs": {
     "url": "https://github.com/maxim8051/exсel-js/issues"
   },
-  "homepage": "https://github.com/maxim8051/exel-js#readme",
+  "homepage": "https://github.com/maxim8051/excel-js#readme",
   "private": true,
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/preset-env": "^7.8.4",
+    "babel-eslint": "^10.1.0",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^5.1.1",
