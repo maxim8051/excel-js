@@ -10,6 +10,14 @@ export class Formula extends ExcelComponent {
     })
   }
 
+  onInput(event) {
+    console.log('Formula: onInput: ', event.target.textContent.trim())
+  }
+
+  onClick(event) {
+    console.log('click')
+  }
+
   toHTML() {
     return `
       <div class="info">fx</div>
@@ -17,7 +25,4 @@ export class Formula extends ExcelComponent {
     `
   }
 
-  onInput(event) {
-    console.log('Formula: onInput: ', event.target.textContent.trim())
-  }
 }
