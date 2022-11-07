@@ -26,7 +26,7 @@
   "homepage": "https://github.com/maxim8051/excel-js#readme",
   "private": true,
   "devDependencies": {
-    "@babel/core": "^7.8.4",
+    "@babel/core": "^7.19.3",
     "@babel/preset-env": "^7.8.4",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.0.6",
@@ -46,6 +46,12 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.3",
-    "normalize.css": "^8.0.1"
+    "@symfony/webpack-encore": "^4.0.0",
+    "assert": "^2.0.0",
+    "fs": "^0.0.1-security",
+    "normalize.css": "^8.0.1",
+    "path": "^0.12.7",
+    "url": "^0.11.0",
+    "util": "^0.12.4"
   }
 }

@@ -1,13 +1,16 @@
 import {ExcelComponent} from '@core/ExcelComponent'
-import {createTable} from '@/components/table/table.template'
 import {$} from '@core/dom'
+import {createTable} from '@/components/table/table.template'
+import {resizeHandler} from '@/components/table/table.resize'
+import {isCell, matrix, nextSelector, shouldResize} from './table.functions'
+import {TableSelection} from '@/components/table/TableSelection'
 
 export class Table extends ExcelComponent {
   static className = 'excel__table'
 
   constructor($root) {
     super($root, {
-      listeners: ['mousedown']
+      listeners: ['mousedown', 'keydown']
     })
   }
 
@@ -15,50 +18,49 @@ export class Table extends ExcelComponent {
     return createTable(20)
   }
 
+  prepare() {
+    this.selection = new TableSelection()
+  }
+
+  init() {
+    super.init()
+
+    const $cell = this.$root.find('[data-id="0:0"]')
+    this.selection.select($cell)
+  }
+
   onMousedown(event) {
-    if (event.target.dataset.resize) {
-      const $resizer = $(event.target)
-      const $parent = $resizer.closest('[data-type="resizable"]')
-      const coords = $parent.getCoords()
-      const type = $resizer.data.resize
-      const sideProp = type === 'col' ? 'bottom' : 'right'
-      let value
-
-      $resizer.css({
-        opacity: 1,
-        [sideProp]: '-5000px'
-      })
-
-      document.onmousemove = e => {
-        if (type === 'col') {
-          const delta = e.pageX - coords.right
-          value = coords.width + delta
-          $resizer.css({right: -delta + 'px'})
-        } else {
-          const delta = e.pageY - coords.bottom
-          value = coords.height + delta
-          $resizer.css({bottom: -delta + 'px'})
-        }
+    if (shouldResize(event)) {
+      resizeHandler(this.$root, event)
+    } else if (isCell(event)) {
+      const $target = $(event.target)
+      if (event.shiftKey) {
+        const $cells = matrix($target, this.selection.current)
+            .map(id => this.$root.find(`[data-id="${id}"]`))
+        this.selection.selectGroup($cells)
+      } else {
+        this.selection.select($target)
       }
+    }
+  }
 
-      document.onmouseup = () => {
-        document.onmousemove = null
-        document.onmouseup = null
+  onKeydown(event) {
+    const keys = [
+      'Enter',
+      'Tab',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowDown',
+      'ArrowUp'
+    ]
 
-        if (type === 'col') {
-          $parent.css({width: value + 'px'})
-          this.$root.findALL(`[data-col="${$parent.data.col}"]`)
-              .forEach(el => el.style.width = value + 'px')
-        } else {
-          $parent.css({height: value + 'px'})
-        }
+    const {key} = event
 
-        $resizer.css({
-          opacity: 0,
-          bottom: 0,
-          right: 0
-        })
-      }
+    if (keys.includes(key) && !event.shiftKey) {
+      event.preventDefault()
+      const id = this.selection.current.id(true)
+      const $next = this.$root.find(nextSelector(key, id))
+      this.selection.select($next)
     }
   }
 }
