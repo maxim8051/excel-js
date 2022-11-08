@@ -3,7 +3,7 @@
      npm install 
      npm run start
 ## Стек:
-  * JavaScript, 
+  * JavaScript
   * SCSS
   * HTML
   * Webpack
